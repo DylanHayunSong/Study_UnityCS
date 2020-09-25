@@ -18,7 +18,25 @@ public class IsoBase : ViewModeBase
     }
     protected override void Move ()
     {
-        base.Move();
+        remainingPos += manager.GetKeyboardInputLocalAxis(pivot.transform) * moveSpeed;
+        if (Input.GetMouseButton(1))
+        {
+            remainingPos += pivot.transform.forward * manager.GetMousePosDelta.normalized.y * moveSpeed;
+            remainingPos.z -= manager.GetMousePosDelta.normalized.y * moveSpeed;
+        }
+        float factor = GetDampenFactor(moveDempening, Time.deltaTime);
+        newPos = Vector3.Lerp(Vector3.zero, remainingPos, factor);
+        pivot.transform.position = pivot.transform.position + new Vector3(newPos.x, 0, newPos.z);
+        float insPosX = cam.transform.position.y + remainingPos.y;
+        if (insPosX < moveVerticalClamp.x || insPosX > moveVerticalClamp.y)
+        {
+            newPos.y = 0;
+            remainingPos.y = 0;
+        }
+        print(insPosX);
+        cam.transform.position = cam.transform.position + new Vector3(0, newPos.y, 0);
+
+        remainingPos -= newPos;
     }
     protected override void Rotate ()
     {
