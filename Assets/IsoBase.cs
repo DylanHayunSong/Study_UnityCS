@@ -4,18 +4,24 @@ using UnityEngine;
 
 public class IsoBase : ViewModeBase
 {
-    private void Start ()
+    protected override void Initialize ()
     {
-        manager = ViewModeManager.inst;
-        thisViewMode = ViewModeManager.ViewModes.Iso;
-        manager.OnViewModeChanged += ChangeViewMode;
+        isCamLookPivot = true;
+        pivot.transform.position = manager.moveBoundary.transform.position;
+        cam.transform.LookAt(pivot);
+        cam.transform.localPosition = Vector3.up * 5f + cam.transform.forward * -10f;
+        base.Initialize();
     }
     protected override void ChangeViewMode (ViewModeManager.ViewModes nextMode)
     {
         base.ChangeViewMode(nextMode);
     }
-    protected override void ResetTransform ()
+    protected override void Move ()
     {
-
+        base.Move();
+    }
+    protected override void Rotate ()
+    {
+        base.Rotate();
     }
 }

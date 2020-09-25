@@ -19,6 +19,11 @@ public class ViewModeManager : MonoBehaviour
 
     public Action<ViewModes> OnViewModeChanged;
 
+    public GameObject moveBoundary;
+
+    private Vector2 currentMousePos = Vector2.zero;
+    private Vector2 lastMousePos = Vector2.zero;
+
     private void Awake ()
     {
         if (inst == null)
@@ -38,12 +43,22 @@ public class ViewModeManager : MonoBehaviour
         Init();
     }
 
+    private void FixedUpdate ()
+    {
+        currentMousePos = Input.mousePosition;
+    }
+
     private void Update ()
     {
         if (lastViewMode != currentViewMode)
         {
             ViewModeChange(currentViewMode);
         }
+    }
+
+    private void LateUpdate ()
+    {
+        lastMousePos = currentMousePos;
     }
 
     public void ViewModeChange (ViewModes nextMode)
@@ -63,17 +78,47 @@ public class ViewModeManager : MonoBehaviour
         for (int i = 0; i < (int)ViewModes.NumberOfTypes; i++)
         {
             viewModeObjDict.Add((ViewModes)i, viewModeObjs[i]);
-            viewModeObjs[i].SetActive(false);
         }
-        viewModeObjDict[currentViewMode].SetActive(true);
         CreateMoveBoundary();
     }
 
     private void CreateMoveBoundary ()
     {
-        GameObject boundary = GameObject.CreatePrimitive(PrimitiveType.Plane);
-        boundary.transform.localScale = new Vector3(planeMax.x - planeMin.x, 1, planeMax.y - planeMin.y);
-        boundary.transform.position = new Vector3(planeMin.x + planeMax.x - planeMin.x, 0, planeMin.y + planeMax.y - planeMin.y);
-        boundary.transform.parent = transform;
+        moveBoundary = GameObject.CreatePrimitive(PrimitiveType.Plane);
+        moveBoundary.transform.localScale = new Vector3(planeMax.x - planeMin.x, 1, planeMax.y - planeMin.y);
+        moveBoundary.transform.position = new Vector3(planeMin.x + planeMax.x - planeMin.x, 0, planeMin.y + planeMax.y - planeMin.y);
+        moveBoundary.transform.parent = transform;
     }
+
+    public Vector3 GetKeyboardInputLocalAxis (Transform origin)
+    {
+        Vector3 inputAxis = Vector3.zero;
+        if (Input.GetKey(KeyCode.W))
+        {
+            inputAxis = origin.transform.forward;
+        }
+        else if (Input.GetKey(KeyCode.S))
+        {
+            inputAxis = -origin.transform.forward;
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            inputAxis = origin.transform.right;
+        }
+        else if (Input.GetKey(KeyCode.A))
+        {
+            inputAxis = -origin.transform.right;
+        }
+        if (Input.GetKey(KeyCode.Q))
+        {
+            inputAxis = origin.transform.up;
+        }
+        else if (Input.GetKey(KeyCode.E))
+        {
+            inputAxis = -origin.transform.up;
+        }
+        return inputAxis;
+    }
+
+    public Vector2 GetMousePosDelta { get { return lastMousePos - currentMousePos; } }
 }

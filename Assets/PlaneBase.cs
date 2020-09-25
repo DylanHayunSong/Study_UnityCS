@@ -4,18 +4,23 @@ using UnityEngine;
 
 public class PlaneBase : ViewModeBase
 {
-    private void Start ()
+    protected override void Initialize ()
     {
-        manager = ViewModeManager.inst;
-        thisViewMode = ViewModeManager.ViewModes.Plane;
-        manager.OnViewModeChanged += ChangeViewMode;
+        isCamLookPivot = true;
+        pivot.transform.position = manager.moveBoundary.transform.position;
+        cam.transform.position = manager.moveBoundary.transform.position + Vector3.up * 50;
+        base.Initialize();
     }
     protected override void ChangeViewMode (ViewModeManager.ViewModes nextMode)
     {
         base.ChangeViewMode(nextMode);
     }
-    protected override void ResetTransform ()
+    protected override void Move ()
     {
-
+        base.Move();
+    }
+    protected override void Rotate ()
+    {
+        base.Rotate();
     }
 }

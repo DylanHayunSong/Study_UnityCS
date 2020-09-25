@@ -347,8 +347,9 @@ MonoBehaviour:
   - {fileID: 2016804850}
   - {fileID: 786633873}
   - {fileID: 1657657511}
-  planeMin: {x: 2, y: 3}
-  planeMax: {x: 5, y: 10}
+  planeMin: {x: 0, y: 0}
+  planeMax: {x: 4, y: 4}
+  moveBoundary: {fileID: 0}
 --- !u!1 &786633873
 GameObject:
   m_ObjectHideFlags: 0
@@ -365,7 +366,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &786633874
 Transform:
   m_ObjectHideFlags: 0
@@ -395,6 +396,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 1500512907}
   pivot: {fileID: 786633874}
+  moveSpeed: 0.1
+  moveDempening: 10
+  moveVerticalClamp: {x: 0, y: 1}
+  rotateSensitivity: 0.1
+  rotateDempening: 10
+  rotateVerticalClamp: {x: 50, y: 310}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -504,7 +511,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1500512904}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 5, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 786633874}
@@ -544,7 +551,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
+  orthographic: 1
   orthographic size: 5
   m_Depth: 0
   m_CullingMask:
@@ -577,7 +584,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1657657512
 Transform:
   m_ObjectHideFlags: 0
@@ -607,6 +614,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 2012896469}
   pivot: {fileID: 1657657512}
+  moveSpeed: 0.1
+  moveDempening: 10
+  moveVerticalClamp: {x: 0, y: 1}
+  rotateSensitivity: 0.1
+  rotateDempening: 10
+  rotateVerticalClamp: {x: 50, y: 310}
 --- !u!1 &2012896466
 GameObject:
   m_ObjectHideFlags: 0
@@ -719,7 +732,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2016804850}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 37715014}
@@ -747,7 +760,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2016804850}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -801,6 +814,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam: {fileID: 37715016}
   pivot: {fileID: 2016804851}
+  moveSpeed: 0.1
+  moveDempening: 10
+  moveVerticalClamp: {x: 1, y: 2.5}
+  rotateSensitivity: 0.1
+  rotateDempening: 10
+  rotateVerticalClamp: {x: 50, y: 310}
 --- !u!54 &2016804856
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -815,5 +834,5 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 80
+  m_Constraints: 112
   m_CollisionDetection: 0
