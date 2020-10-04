@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Scripting.APIUpdating;
 
 public class ViewModeBase : MonoBehaviour
 {
@@ -20,6 +19,11 @@ public class ViewModeBase : MonoBehaviour
     public float rotateSensitivity = 0.1f;
     public float rotateDempening = 10f;
     public Vector2 rotateVerticalClamp = new Vector2(50, 310);
+
+    [Header("Zoom")]
+    public float zoomSpeed = 0.1f;
+    public float zoomDempening = 10f;
+    public Vector2 zoomClamp = new Vector2(1, 10);
 
     protected Vector3 remainingPos;
     protected Vector3 pivotOriginalPos;
@@ -48,6 +52,7 @@ public class ViewModeBase : MonoBehaviour
             cam.transform.LookAt(pivot);
         Move();
         Rotate();
+        Zoom();
     }
 
     protected virtual void Initialize ()
@@ -71,6 +76,11 @@ public class ViewModeBase : MonoBehaviour
     }
 
     protected virtual void Rotate ()
+    {
+
+    }
+
+    protected virtual void Zoom()
     {
 
     }
