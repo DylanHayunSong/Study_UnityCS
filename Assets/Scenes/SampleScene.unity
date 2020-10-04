@@ -342,7 +342,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 893c983726ced4046860e4971c26d66c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentViewMode: 0
+  currentViewMode: 1
   viewModeObjs:
   - {fileID: 2016804850}
   - {fileID: 786633873}
@@ -398,10 +398,10 @@ MonoBehaviour:
   pivot: {fileID: 786633874}
   moveSpeed: 0.1
   moveDempening: 10
-  moveVerticalClamp: {x: 0, y: 1}
+  moveVerticalClamp: {x: 3, y: 7}
   rotateSensitivity: 0.1
   rotateDempening: 10
-  rotateVerticalClamp: {x: 50, y: 310}
+  rotateVerticalClamp: {x: 50, y: 375}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -551,7 +551,7 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 1
+  orthographic: 0
   orthographic size: 5
   m_Depth: 0
   m_CullingMask:

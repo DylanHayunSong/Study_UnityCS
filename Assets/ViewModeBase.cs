@@ -10,7 +10,7 @@ public class ViewModeBase : MonoBehaviour
 
     public Camera cam;
     public Transform pivot;
-    [Space(25)]
+
     [Header("Move")]
     public float moveSpeed = 0.1f;
     public float moveDempening = 10f;
@@ -37,8 +37,7 @@ public class ViewModeBase : MonoBehaviour
 
     private void Start ()
     {
-        manager = ViewModeManager.inst;
-        thisViewMode = ViewModeManager.ViewModes.Plane;
+        manager = ViewModeManager.inst;        
         manager.OnViewModeChanged += ChangeViewMode;
         Initialize();
     }
@@ -62,7 +61,8 @@ public class ViewModeBase : MonoBehaviour
 
     protected virtual void ChangeViewMode (ViewModeManager.ViewModes nextMode)
     {
-        manager.viewModeObjDict[nextMode].SetActive(true);
+        ResetTransform();
+        manager.viewModeObjDict[nextMode].SetActive(true);        
     }
 
     protected virtual void Move ()

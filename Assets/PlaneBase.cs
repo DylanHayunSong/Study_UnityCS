@@ -11,10 +11,6 @@ public class PlaneBase : ViewModeBase
         cam.transform.position = manager.moveBoundary.transform.position + Vector3.up * 50;
         base.Initialize();
     }
-    protected override void ChangeViewMode (ViewModeManager.ViewModes nextMode)
-    {
-        base.ChangeViewMode(nextMode);
-    }
     protected override void Move ()
     {
         base.Move();
