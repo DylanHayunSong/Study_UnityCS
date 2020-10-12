@@ -8,17 +8,20 @@ public class ViewModeManager : MonoBehaviour
     public static ViewModeManager inst = null;
     public enum ViewModes { EyeLevel = 0, Iso = 1, Plane = 2, NumberOfTypes }
     public ViewModes currentViewMode = ViewModes.EyeLevel;
-    private ViewModes lastViewMode = ViewModes.EyeLevel;
-    public GameObject[] viewModeObjs;
+    [HideInInspector]
+    public ViewModes lastViewMode = ViewModes.EyeLevel;
+    public ViewModeBase[] viewModeObjs;
 
     public Vector2 planeMin = Vector2.zero;
     public Vector2 planeMax = Vector2.one;
 
-    public Dictionary<ViewModes, GameObject> viewModeObjDict = new Dictionary<ViewModes, GameObject>();
+    public Dictionary<ViewModes, ViewModeBase> viewModeObjDict = new Dictionary<ViewModes, ViewModeBase>();
 
     public Action<ViewModes> OnViewModeChanged;
 
     public GameObject moveBoundary;
+
+    public bool isViewmodeChanging = false;
 
     private Vector2 currentMousePos = Vector2.zero;
     private Vector2 lastMousePos = Vector2.zero;
@@ -68,8 +71,8 @@ public class ViewModeManager : MonoBehaviour
             OnViewModeChanged.Invoke(currentViewMode);
         }
 
-        viewModeObjDict[lastViewMode].SetActive(false);
-        lastViewMode = currentViewMode;
+        //viewModeObjDict[lastViewMode].SetActive(false);
+        //lastViewMode = currentViewMode;
     }
 
     private void Init ()

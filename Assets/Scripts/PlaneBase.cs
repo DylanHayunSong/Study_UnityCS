@@ -41,6 +41,10 @@ public class PlaneBase : ViewModeBase
     protected override void Zoom ()
     {
         float scroolDelta = Input.mouseScrollDelta.y;
+        if(scroolDelta != 0)
+        {
+            remainingPos.y = 0;
+        } 
 
         remainingPos.y += scroolDelta * zoomSpeed;
 

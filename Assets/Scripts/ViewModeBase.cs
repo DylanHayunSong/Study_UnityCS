@@ -37,7 +37,7 @@ public class ViewModeBase : MonoBehaviour
 
     protected Vector3 newPos;
     protected Vector3 newRot;
-    
+
 
     private void Start ()
     {
@@ -48,11 +48,15 @@ public class ViewModeBase : MonoBehaviour
 
     private void FixedUpdate ()
     {
+        print(Input.mouseScrollDelta);
         if (isCamLookPivot)
             cam.transform.LookAt(pivot);
-        Move();
-        Rotate();
-        Zoom();
+        if (!manager.isViewmodeChanging)
+        {
+            Move();
+            Rotate();
+            Zoom();
+        }
     }
 
     protected virtual void Initialize ()
@@ -66,8 +70,45 @@ public class ViewModeBase : MonoBehaviour
 
     protected virtual void ChangeViewMode (ViewModeManager.ViewModes nextMode)
     {
+        
+        if (manager.isViewmodeChanging == false)
+        {
+            StartCoroutine(ChangeViewModeRoutine(nextMode));
+        }
+        manager.isViewmodeChanging = true;
+    }
+
+    protected IEnumerator ChangeViewModeRoutine(ViewModeManager.ViewModes nextMode)
+    {
+        manager.viewModeObjDict[nextMode].gameObject.SetActive(true);
+        manager.viewModeObjDict[nextMode].cam.gameObject.SetActive(false);
+
+        Vector3 camPos = cam.transform.position;
+        Quaternion camRot = cam.transform.rotation;
+        for(float i = 0; i < 1f; i += 0.01f)
+        {
+            CamEasing(i, camPos, camRot);
+            yield return null;
+        }
+        manager.OnViewModeChanged = null;
         ResetTransform();
-        manager.viewModeObjDict[nextMode].SetActive(true);        
+        manager.viewModeObjDict[manager.lastViewMode].gameObject.SetActive(false);
+        manager.lastViewMode = manager.currentViewMode;
+        manager.viewModeObjDict[nextMode].cam.gameObject.SetActive(true);
+        manager.OnViewModeChanged += manager.viewModeObjDict[manager.currentViewMode].ChangeViewMode;
+        manager.isViewmodeChanging = false;
+
+        yield return null;
+    }
+
+    protected void CamEasing(float i, Vector3 camPos, Quaternion camRot)
+    {
+        if(camRot.x < 0)
+        {
+            camRot.x = -camRot.x;
+        }
+        cam.transform.position = Vector3.Lerp(camPos, manager.viewModeObjDict[manager.currentViewMode].cam.transform.position, i);
+        cam.transform.rotation = Quaternion.Lerp(camRot, manager.viewModeObjDict[manager.currentViewMode].cam.transform.rotation, i);
     }
 
     protected virtual void Move ()
