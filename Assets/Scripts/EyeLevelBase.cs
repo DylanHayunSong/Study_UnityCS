@@ -59,4 +59,9 @@ public class EyeLevelBase : ViewModeBase
         pivot.transform.eulerAngles = pivot.transform.eulerAngles + new Vector3(0, newRot.y, 0);
         remainingRot -= newRot;
     }
+
+    protected override void Teleport ()
+    {
+        base.Teleport();
+    }
 }

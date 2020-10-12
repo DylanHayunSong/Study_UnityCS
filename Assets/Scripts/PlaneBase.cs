@@ -58,4 +58,9 @@ public class PlaneBase : ViewModeBase
         
     }
 
+    protected override void Teleport ()
+    {
+        base.Teleport();
+    }
+
 }

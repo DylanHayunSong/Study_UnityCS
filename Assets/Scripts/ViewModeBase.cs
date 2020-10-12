@@ -38,17 +38,19 @@ public class ViewModeBase : MonoBehaviour
     protected Vector3 newPos;
     protected Vector3 newRot;
 
+    protected Ray ray = new Ray();
+    protected RaycastHit hitPoint = new RaycastHit();
 
     private void Start ()
     {
         manager = ViewModeManager.inst;        
         manager.OnViewModeChanged += ChangeViewMode;
+        manager.OnMouseDoubleClick += Teleport;
         Initialize();
     }
 
     private void FixedUpdate ()
     {
-        print(Input.mouseScrollDelta);
         if (isCamLookPivot)
             cam.transform.LookAt(pivot);
         if (!manager.isViewmodeChanging)
@@ -91,11 +93,13 @@ public class ViewModeBase : MonoBehaviour
             yield return null;
         }
         manager.OnViewModeChanged = null;
+        manager.OnMouseDoubleClick = null;
         ResetTransform();
         manager.viewModeObjDict[manager.lastViewMode].gameObject.SetActive(false);
         manager.lastViewMode = manager.currentViewMode;
         manager.viewModeObjDict[nextMode].cam.gameObject.SetActive(true);
         manager.OnViewModeChanged += manager.viewModeObjDict[manager.currentViewMode].ChangeViewMode;
+        manager.OnMouseDoubleClick += manager.viewModeObjDict[manager.currentViewMode].Teleport;
         manager.isViewmodeChanging = false;
 
         yield return null;
@@ -107,8 +111,8 @@ public class ViewModeBase : MonoBehaviour
         {
             camRot.x = -camRot.x;
         }
-        cam.transform.position = Vector3.Lerp(camPos, manager.viewModeObjDict[manager.currentViewMode].cam.transform.position, i);
-        cam.transform.rotation = Quaternion.Lerp(camRot, manager.viewModeObjDict[manager.currentViewMode].cam.transform.rotation, i);
+        cam.transform.position = Vector3.Slerp(camPos, manager.viewModeObjDict[manager.currentViewMode].cam.transform.position, i);
+        cam.transform.rotation = Quaternion.Slerp(camRot, manager.viewModeObjDict[manager.currentViewMode].cam.transform.rotation, i);
     }
 
     protected virtual void Move ()
@@ -124,6 +128,15 @@ public class ViewModeBase : MonoBehaviour
     protected virtual void Zoom()
     {
 
+    }
+
+    protected virtual void Teleport()
+    {
+        print(this.gameObject.name + "_TelePORT");
+        if(Physics.Raycast(cam.ScreenPointToRay(Input.mousePosition), out hitPoint,Mathf.Infinity))
+        {
+            print(hitPoint.transform.name);
+        }
     }
 
     protected virtual void ResetTransform ()

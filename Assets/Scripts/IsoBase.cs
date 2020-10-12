@@ -60,4 +60,9 @@ public class IsoBase : ViewModeBase
         remainingRot -= newRot;
 
     }
+
+    protected override void Teleport ()
+    {
+        base.Teleport();
+    }
 }

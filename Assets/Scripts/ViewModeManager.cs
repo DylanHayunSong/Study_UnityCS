@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class ViewModeManager : MonoBehaviour
 {
@@ -25,6 +26,14 @@ public class ViewModeManager : MonoBehaviour
 
     private Vector2 currentMousePos = Vector2.zero;
     private Vector2 lastMousePos = Vector2.zero;
+
+    private float doubleClickTimer = 0.3f;
+    private float lastClickTime;
+    private bool isMouseClicked = false;
+
+    public Vector2 GetMousePosDelta { get { return lastMousePos - currentMousePos; } }
+
+    public Action OnMouseDoubleClick;
 
     private void Awake ()
     {
@@ -56,6 +65,8 @@ public class ViewModeManager : MonoBehaviour
         {
             ViewModeChange(currentViewMode);
         }
+
+        GetMouseDoubleClick();
     }
 
     private void LateUpdate ()
@@ -122,5 +133,28 @@ public class ViewModeManager : MonoBehaviour
         return inputAxis;
     }
 
-    public Vector2 GetMousePosDelta { get { return lastMousePos - currentMousePos; } }
+    private void GetMouseDoubleClick ()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            if (isMouseClicked)
+            {
+
+                OnMouseDoubleClick.Invoke();
+                isMouseClicked = false;
+            }
+            else
+            {
+                isMouseClicked = true;
+                lastClickTime = Time.time;
+            }
+        }
+        if (Time.time - lastClickTime > doubleClickTimer && isMouseClicked)
+        {
+            isMouseClicked = false;
+        }
+    }
+
+
+
 }
