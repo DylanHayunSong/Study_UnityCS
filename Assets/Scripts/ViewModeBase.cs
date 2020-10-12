@@ -111,8 +111,8 @@ public class ViewModeBase : MonoBehaviour
         {
             camRot.x = -camRot.x;
         }
-        cam.transform.position = Vector3.Slerp(camPos, manager.viewModeObjDict[manager.currentViewMode].cam.transform.position, i);
-        cam.transform.rotation = Quaternion.Slerp(camRot, manager.viewModeObjDict[manager.currentViewMode].cam.transform.rotation, i);
+        cam.transform.position = Vector3.Lerp(camPos, manager.viewModeObjDict[manager.currentViewMode].cam.transform.position, i);
+        cam.transform.rotation = Quaternion.Lerp(camRot, manager.viewModeObjDict[manager.currentViewMode].cam.transform.rotation, i);
     }
 
     protected virtual void Move ()

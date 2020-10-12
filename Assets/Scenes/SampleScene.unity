@@ -1222,7 +1222,7 @@ MonoBehaviour:
   pivot: {fileID: 786633874}
   moveSpeed: 0.1
   moveDempening: 10
-  moveVerticalClamp: {x: 3, y: 7}
+  moveVerticalClamp: {x: 5, y: 30}
   rotateSensitivity: 0.1
   rotateDempening: 10
   rotateVerticalClamp: {x: 50, y: 375}

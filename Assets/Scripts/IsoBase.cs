@@ -9,7 +9,7 @@ public class IsoBase : ViewModeBase
         isCamLookPivot = true;
         pivot.transform.position = manager.moveBoundary.transform.position;
         cam.transform.LookAt(pivot);
-        cam.transform.localPosition = Vector3.up * 5f + cam.transform.forward * -10f;
+        cam.transform.localPosition = Vector3.up * 10f + cam.transform.forward * -manager.planeMax.y*10;
         base.Initialize();
     }
     protected override void Move ()
@@ -43,20 +43,20 @@ public class IsoBase : ViewModeBase
         {
             screenDelta  = Vector2.zero;
         }
-        remainingRot.y += screenDelta.x * rotateSensitivity;
-        remainingRot.x -= screenDelta.y * (rotateSensitivity/10);
+        remainingRot.x += screenDelta.x * rotateSensitivity;
+        remainingRot.y -= screenDelta.y * (rotateSensitivity/5);
         remainingRot.z = 0;
         float factor = GetDampenFactor(rotateDempening, Time.deltaTime);
         newRot = Vector3.Lerp(Vector3.zero, remainingRot, factor);
-        float insRotX = cam.transform.position.y + newRot.x;
+        float insRotX = cam.transform.position.y - newRot.y;
 
         if (insRotX < moveVerticalClamp.x || insRotX > moveVerticalClamp.y)
         {
-            newRot.x = 0;
-            remainingRot.x = 0;
+            newRot.y = 0;
+            remainingRot.y = 0;
         }
-        cam.transform.position = cam.transform.position + new Vector3(0, newRot.x, 0);
-        pivot.transform.eulerAngles = pivot.transform.eulerAngles + new Vector3(0, newRot.y, 0);
+        cam.transform.position = cam.transform.position - new Vector3(0, newRot.y, 0);
+        pivot.transform.eulerAngles = pivot.transform.eulerAngles + new Vector3(0, newRot.x, 0);
         remainingRot -= newRot;
 
     }
