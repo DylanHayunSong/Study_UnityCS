@@ -18,7 +18,10 @@ public class ViewModeUI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if((ViewModeManager.ViewModes)viewModeDropDown.value != manager.currentViewMode)
+        {
+            viewModeDropDown.value = (int)manager.currentViewMode;
+        }
     }
 
     public void ChangeViweMode()

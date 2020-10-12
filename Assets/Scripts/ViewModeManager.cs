@@ -76,14 +76,14 @@ public class ViewModeManager : MonoBehaviour
 
     public void ViewModeChange (ViewModes nextMode)
     {
-        currentViewMode = nextMode;
-        if (OnViewModeChanged != null)
+        if (currentViewMode != nextMode)
         {
-            OnViewModeChanged.Invoke(currentViewMode);
+            currentViewMode = nextMode;
+            if (OnViewModeChanged != null)
+            {
+                OnViewModeChanged.Invoke(currentViewMode);
+            }
         }
-
-        //viewModeObjDict[lastViewMode].SetActive(false);
-        //lastViewMode = currentViewMode;
     }
 
     private void Init ()
@@ -99,7 +99,7 @@ public class ViewModeManager : MonoBehaviour
     {
         moveBoundary = GameObject.CreatePrimitive(PrimitiveType.Plane);
         moveBoundary.transform.localScale = new Vector3(planeMax.x - planeMin.x, 1, planeMax.y - planeMin.y);
-        moveBoundary.transform.position = new Vector3(planeMin.x + planeMax.x - planeMin.x, 0, planeMin.y + planeMax.y - planeMin.y);
+        moveBoundary.transform.position = Vector3.zero;
         moveBoundary.transform.parent = transform;
     }
 

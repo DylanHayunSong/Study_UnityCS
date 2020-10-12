@@ -132,10 +132,19 @@ public class ViewModeBase : MonoBehaviour
 
     protected virtual void Teleport()
     {
-        print(this.gameObject.name + "_TelePORT");
-        if(Physics.Raycast(cam.ScreenPointToRay(Input.mousePosition), out hitPoint,Mathf.Infinity))
+        if (!manager.isViewmodeChanging)
         {
-            print(hitPoint.transform.name);
+            if (Physics.Raycast(cam.ScreenPointToRay(Input.mousePosition), out hitPoint, Mathf.Infinity))
+            {
+                if (manager.currentViewMode == ViewModeManager.ViewModes.EyeLevel)
+                {
+
+                }
+                manager.ViewModeChange(ViewModeManager.ViewModes.EyeLevel);
+                manager.viewModeObjDict[ViewModeManager.ViewModes.EyeLevel].transform.position = hitPoint.point + Vector3.up * 2;
+                
+                print(hitPoint.transform.name);
+            }
         }
     }
 

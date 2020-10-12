@@ -38,13 +38,13 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0, g: 0, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 11
-  m_GIWorkflowMode: 1
+  m_GIWorkflowMode: 0
   m_GISettings:
     serializedVersion: 2
     m_BounceScale: 1
@@ -1170,8 +1170,8 @@ MonoBehaviour:
   - {fileID: 2016804855}
   - {fileID: 786633875}
   - {fileID: 1657657513}
-  planeMin: {x: 0, y: 0}
-  planeMax: {x: 4, y: 4}
+  planeMin: {x: -2, y: -2}
+  planeMax: {x: 2, y: 2}
   moveBoundary: {fileID: 0}
   isViewmodeChanging: 0
 --- !u!1 &786633873
@@ -1244,7 +1244,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &804229809
 Transform:
   m_ObjectHideFlags: 0

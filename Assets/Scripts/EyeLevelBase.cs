@@ -16,8 +16,8 @@ public class EyeLevelBase : ViewModeBase
         remainingPos += manager.GetKeyboardInputLocalAxis(pivot.transform) * moveSpeed;
         if (Input.GetMouseButton(1))
         {
-            remainingPos.x += manager.GetMousePosDelta.normalized.x * moveSpeed * 2;
-            remainingPos.z += manager.GetMousePosDelta.normalized.y * moveSpeed * 2;
+            remainingPos += cam.transform.right.normalized * manager.GetMousePosDelta.normalized.x * moveSpeed * 2;
+            remainingPos += cam.transform.forward.normalized * manager.GetMousePosDelta.normalized.y * moveSpeed * 2;
         }
         float factor = GetDampenFactor(moveDempening, Time.deltaTime);
         newPos = Vector3.Lerp(Vector3.zero, remainingPos, factor);
