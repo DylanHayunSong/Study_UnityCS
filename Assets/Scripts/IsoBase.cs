@@ -9,7 +9,7 @@ public class IsoBase : ViewModeBase
         isCamLookPivot = true;
         pivot.transform.position = manager.moveBoundary.transform.position;
         cam.transform.LookAt(pivot);
-        cam.transform.localPosition = Vector3.up * 10f + cam.transform.forward * -manager.planeMax.y*10;
+        cam.transform.localPosition = Vector3.up * 10f + cam.transform.forward * -manager.planeSize.y*10;
         base.Initialize();
     }
     protected override void Move ()

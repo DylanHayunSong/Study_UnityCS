@@ -8,7 +8,7 @@ public class PlaneBase : ViewModeBase
     {
         isCamLookPivot = true;
         pivot.transform.position = manager.moveBoundary.transform.position;
-        cam.transform.position = manager.moveBoundary.transform.position + Vector3.up * 50;
+        cam.transform.position = manager.moveBoundary.transform.position + Vector3.up * Mathf.Max(manager.planeSize.x,manager.planeSize.y) * 10;
         base.Initialize();
     }
     protected override void Move ()

@@ -49,7 +49,7 @@ public class ViewModeBase : MonoBehaviour
         Initialize();
     }
 
-    private void FixedUpdate ()
+    private void Update ()
     {
         if (isCamLookPivot)
             cam.transform.LookAt(pivot);
@@ -140,9 +140,11 @@ public class ViewModeBase : MonoBehaviour
                 {
 
                 }
-                manager.ViewModeChange(ViewModeManager.ViewModes.EyeLevel);
-                manager.viewModeObjDict[ViewModeManager.ViewModes.EyeLevel].transform.position = hitPoint.point + Vector3.up * 2;
-                
+                else
+                {
+                    manager.ViewModeChange(ViewModeManager.ViewModes.EyeLevel);
+                    manager.viewModeObjDict[ViewModeManager.ViewModes.EyeLevel].transform.position = hitPoint.point + Vector3.up * 2;
+                }
                 print(hitPoint.transform.name);
             }
         }

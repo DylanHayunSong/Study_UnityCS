@@ -35,6 +35,7 @@ public class EyeLevelBase : ViewModeBase
     protected override void Rotate ()
     {
         Vector2 screenDelta;
+        
         if (Input.GetMouseButton(0))
         {
             screenDelta = manager.GetMousePosDelta;
@@ -43,6 +44,7 @@ public class EyeLevelBase : ViewModeBase
         {
             screenDelta = Vector2.zero;
         }
+        
         remainingRot.y += screenDelta.x * rotateSensitivity;
         remainingRot.x -= screenDelta.y * rotateSensitivity;
         remainingRot.z = 0;

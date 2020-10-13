@@ -9,19 +9,18 @@ public class ViewModeManager : MonoBehaviour
     public static ViewModeManager inst = null;
     public enum ViewModes { EyeLevel = 0, Iso = 1, Plane = 2, NumberOfTypes }
     public ViewModes currentViewMode = ViewModes.EyeLevel;
-    [HideInInspector]
     public ViewModes lastViewMode = ViewModes.EyeLevel;
     public ViewModeBase[] viewModeObjs;
 
-    public Vector2 planeMin = Vector2.zero;
-    public Vector2 planeMax = Vector2.one;
+    public Vector2 planeSize = Vector2.one;
 
     public Dictionary<ViewModes, ViewModeBase> viewModeObjDict = new Dictionary<ViewModes, ViewModeBase>();
 
     public Action<ViewModes> OnViewModeChanged;
 
+    [HideInInspector]
     public GameObject moveBoundary;
-
+    [HideInInspector]
     public bool isViewmodeChanging = false;
 
     private Vector2 currentMousePos = Vector2.zero;
@@ -46,17 +45,19 @@ public class ViewModeManager : MonoBehaviour
             Destroy(this.gameObject);
             return;
         }
-
+        Init();
     }
 
     private void Start ()
     {
-        Init();
+
     }
 
     private void FixedUpdate ()
     {
+
         currentMousePos = Input.mousePosition;
+
     }
 
     private void Update ()
@@ -65,7 +66,6 @@ public class ViewModeManager : MonoBehaviour
         {
             ViewModeChange(currentViewMode);
         }
-
         GetMouseDoubleClick();
     }
 
@@ -76,14 +76,12 @@ public class ViewModeManager : MonoBehaviour
 
     public void ViewModeChange (ViewModes nextMode)
     {
-        if (currentViewMode != nextMode)
+        currentViewMode = nextMode;
+        if (OnViewModeChanged != null)
         {
-            currentViewMode = nextMode;
-            if (OnViewModeChanged != null)
-            {
-                OnViewModeChanged.Invoke(currentViewMode);
-            }
+            OnViewModeChanged.Invoke(currentViewMode);
         }
+
     }
 
     private void Init ()
@@ -98,7 +96,7 @@ public class ViewModeManager : MonoBehaviour
     private void CreateMoveBoundary ()
     {
         moveBoundary = GameObject.CreatePrimitive(PrimitiveType.Plane);
-        moveBoundary.transform.localScale = new Vector3(planeMax.x - planeMin.x, 1, planeMax.y - planeMin.y);
+        moveBoundary.transform.localScale = new Vector3(planeSize.x, 1, planeSize.y);
         moveBoundary.transform.position = Vector3.zero;
         moveBoundary.transform.parent = transform;
     }
