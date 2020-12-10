@@ -24,7 +24,10 @@ public class ViewModeUI : MonoBehaviour
         }
     }
 
-    public void ChangeViweMode()
+    //
+    //summary
+    //  ChangeViewMode
+    public void ChangeViewMode()
     {
         manager.ViewModeChange((ViewModeManager.ViewModes)viewModeDropDown.value);
     }
