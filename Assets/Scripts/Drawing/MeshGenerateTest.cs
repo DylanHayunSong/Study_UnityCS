@@ -44,8 +44,8 @@ public class MeshGenerateTest : MonoBehaviour
     public Vector3[] points;
 
     public MeshGenerator.TopType topType;
-    public MeshGenerator.EndType endType;
-    public MeshGenerator.CornerType cornerType;
+    public MeshGenerator.CabinetType cabinetType;
+
 
     // Start is called before the first frame update
     void Start ()
@@ -62,43 +62,43 @@ public class MeshGenerateTest : MonoBehaviour
                 filter.mesh = gen.Panel(whd.x, whd.y, whd.z, origin, direction);
                 break;
             case GeneratorFunction.cube:
-                filter.mesh = gen.Cube(whd.x, whd.y, whd.z, thick, true);
+                filter.mesh = gen.Cube(whd.x, whd.y, whd.z, bottomThick, sideThick, backThick, origin, direction, isTopBlocked);
                 break;
             case GeneratorFunction.diagonalBoard:
-                filter.mesh = gen.DiagonalBoard(whd.x, whd.y, whd.z, origin, direction, cutDepth, cornerType);
+                filter.mesh = gen.DiagonalBoard(whd.x, whd.y, whd.z, origin, direction, cutDepth, cabinetType);
                 break;
             case GeneratorFunction.diagonal:
-                filter.mesh = gen.Diagonal(whd.x, whd.y, whd.z, bottomThick, sideThick, backThick, cutDepth, isTopBlocked, cornerType);
+                filter.mesh = gen.Diagonal(whd.x, whd.y, whd.z, bottomThick, sideThick, backThick, origin, direction, cutDepth, isTopBlocked, cabinetType);
                 break;
             case GeneratorFunction.pieBoard:
-                filter.mesh = gen.PieBoard(whd.x, whd.y, whd.z, origin, direction, cutDepth, cornerType);
+                filter.mesh = gen.PieBoard(whd.x, whd.y, whd.z, origin, direction, cutDepth, cabinetType);
                 break;
             case GeneratorFunction.piecut:
-                filter.mesh = gen.Piecut(whd.x, whd.y, whd.z, bottomThick, sideThick, backThick, cutDepth, isTopBlocked, cornerType);
+                filter.mesh = gen.Piecut(whd.x, whd.y, whd.z, bottomThick, sideThick, backThick, origin, direction, cutDepth, isTopBlocked, cabinetType);
                 break;
             case GeneratorFunction.roundBoard:
-                filter.mesh = gen.RoundBoard(whd.x, whd.y, whd.z, origin, direction, roundness, endType);
+                filter.mesh = gen.RoundBoard(whd.x, whd.y, whd.z, origin, direction, roundness, cabinetType);
                 break;
             case GeneratorFunction.roundEnd:
-                filter.mesh = gen.RoundEnd(whd.x, whd.y, whd.z, bottomThick, sideThick, backThick, roundness, isTopBlocked, topType, endType);
+                filter.mesh = gen.RoundEnd(whd.x, whd.y, whd.z, bottomThick, sideThick, backThick, origin, direction, roundness, isTopBlocked, topType, cabinetType);
                 break;
             case GeneratorFunction.softRoundBoard:
-                filter.mesh = gen.SoftRoundBoard(whd.x, whd.y, whd.z, origin, direction, roundness, endType);
+                filter.mesh = gen.SoftRoundBoard(whd.x, whd.y, whd.z, origin, direction, roundness, cabinetType);
                 break;
             case GeneratorFunction.softRoundEnd:
-                filter.mesh = gen.SoftRoundEnd(whd.x, whd.y, whd.z, bottomThick, sideThick, backThick, roundness, isTopBlocked, endType);
+                filter.mesh = gen.SoftRoundEnd(whd.x, whd.y, whd.z, bottomThick, sideThick, backThick, origin, direction, roundness, isTopBlocked, cabinetType);
                 break;
             case GeneratorFunction.triBoard:
-                filter.mesh = gen.TriBoard(whd.x, whd.y, whd.z, origin, direction, endType);
+                filter.mesh = gen.TriBoard(whd.x, whd.y, whd.z, origin, direction, cabinetType);
                 break;
             case GeneratorFunction.triEnd:
-                filter.mesh = gen.TriEnd(whd.x, whd.y, whd.z, bottomThick, sideThick, backThick, isTopBlocked, endType);
+                filter.mesh = gen.TriEnd(whd.x, whd.y, whd.z, bottomThick, sideThick, backThick, origin, direction, isTopBlocked, cabinetType);
                 break;
             case GeneratorFunction.squareBoard:
-                filter.mesh = gen.SquareBoard(whd.x, whd.y, whd.z, origin, direction, endType);
+                filter.mesh = gen.SquareBoard(whd.x, whd.y, whd.z, origin, direction, cabinetType);
                 break;
             case GeneratorFunction.squareEnd:
-                filter.mesh = gen.SquareEnd(whd.x, whd.y, whd.z, bottomThick, sideThick, backThick, isTopBlocked, endType);
+                filter.mesh = gen.SquareEnd(whd.x, whd.y, whd.z, bottomThick, sideThick, backThick, origin, direction, isTopBlocked, cabinetType);
                 break;
 
         }
