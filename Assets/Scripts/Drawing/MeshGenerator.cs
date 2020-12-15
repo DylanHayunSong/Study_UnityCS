@@ -64,7 +64,7 @@ public class MeshGenerator
             new Vector3(width * 0.5f - cutDepth, -height * 0.5f, width * 0.5f)
         };
 
-        return BoardFromPoints(bottomVert, height, origin, dir, cabinetType == CabinetType.R, cabinetType:cabinetType);
+        return BoardFromPoints(bottomVert, height, origin, dir, cabinetType == CabinetType.R, cabinetType: cabinetType);
     }
 
     public Mesh PieBoard (float width, float height, float depth, float cutDepth = 0, CabinetType cabinetType = CabinetType.L)
@@ -194,7 +194,7 @@ public class MeshGenerator
     #region Cabinet carcass
     public Mesh Cube (float width, float height, float depth, float thick, bool isTopBlocked = false)
     {
-        return Cube(width, height, depth, thick, thick, thick, isTopBlocked);
+        return Cube(width, height, depth, thick, thick, thick, Vector3.zero, Vector3.forward, isTopBlocked);
     }
     public Mesh Cube (float width, float height, float depth, float thick, Vector3 origin, Vector3 dir, bool isTopBlocked = false)
     {
@@ -243,7 +243,7 @@ public class MeshGenerator
 
     public Mesh Diagonal (float width, float height, float depth, float thick, float cutDepth = 0, bool isTopBlocked = false, CabinetType cabinetType = CabinetType.L)
     {
-        return Diagonal(width, height, depth, thick, thick, thick, cutDepth, isTopBlocked, cabinetType);
+        return Diagonal(width, height, depth, thick, thick, thick, Vector3.zero, Vector3.forward, cutDepth, isTopBlocked, cabinetType);
     }
     public Mesh Diagonal (float width, float height, float depth, float thick, Vector3 origin, Vector3 dir, float cutDepth = 0, bool isTopBlocked = false, CabinetType cabinetType = CabinetType.L)
     {
@@ -485,6 +485,48 @@ public class MeshGenerator
                     panels.Add(RoundBoard(width - sideThick, bottomThick, depth - backThcik, panelPivot, dir, 2, cabinetType));
                     break;
             }
+        }
+
+        return Combine(panels.ToArray());
+    }
+
+    public Mesh DiagonalEnd (float width, float height, float depth, float bottomThick, float sideThick, float backThcik, Vector3 origin, Vector3 dir, bool isTopBlocked = false, CabinetType cabinetType = CabinetType.L)
+    {
+        List<Mesh> panels = new List<Mesh>();
+
+        dir = dir == Vector3.zero ? Vector3.forward : dir;
+        Matrix4x4 trans = Matrix4x4.TRS(origin, Quaternion.LookRotation(dir, Vector3.up), Vector3.one);
+
+        //Bottom
+        Vector3 panelPivot = cabinetType == CabinetType.L ?
+            new Vector3(sideThick * 0.5f, -(height - bottomThick) * 0.5f, -backThcik * 0.5f) :
+            new Vector3(-sideThick * 0.5f, -(height - bottomThick) * 0.5f, -backThcik * 0.5f);
+        panelPivot = trans.MultiplyPoint(panelPivot);
+        panels.Add(RoundBoard(width - sideThick, bottomThick, depth - backThcik, panelPivot, dir, 2, cabinetType));
+
+        //Side
+        panelPivot = cabinetType == CabinetType.L ?
+            new Vector3(-(width - sideThick) * 0.5f, 0, 0) :
+            new Vector3((width - sideThick) * 0.5f, 0, 0);
+        panelPivot = trans.MultiplyPoint(panelPivot);
+        panels.Add(Panel(sideThick, height, depth, panelPivot, dir));
+
+        //Back
+        panelPivot = cabinetType == CabinetType.L ?
+            new Vector3(sideThick * 0.5f, 0, (depth - backThcik) * 0.5f) :
+            new Vector3(-sideThick * 0.5f, 0, (depth - backThcik) * 0.5f);
+        panelPivot = trans.MultiplyPoint(panelPivot);
+        panels.Add(Panel(width - sideThick, height, backThcik, panelPivot, dir));
+
+        //Top
+        panelPivot = cabinetType == CabinetType.L ?
+            new Vector3(sideThick * 0.5f, (height - bottomThick) * 0.5f, -backThcik * 0.5f) :
+            new Vector3(-sideThick * 0.5f, (height - bottomThick) * 0.5f, -backThcik * 0.5f);
+        panelPivot = trans.MultiplyPoint(panelPivot);
+
+        if (isTopBlocked)
+        {
+            panels.Add(RoundBoard(width - sideThick, bottomThick, depth - backThcik, panelPivot, dir, 2, cabinetType));
         }
 
         return Combine(panels.ToArray());
@@ -885,10 +927,10 @@ public class MeshGenerator
             n += 4;
         }
 
-        if(cabinetType == CabinetType.R)
+        if (cabinetType == CabinetType.R)
         {
             bottomTri = bottomTri.Reverse().ToArray();
-        } 
+        }
 
         Mesh[] meshes =
         {
@@ -969,6 +1011,106 @@ public class MeshGenerator
         }
 
         return mesh;
+    }
+    public GameObject Combine (GameObject rootObj)
+    {
+        Vector3 basePosition = rootObj.transform.position;
+        Quaternion baseRotation = rootObj.transform.rotation;
+        rootObj.transform.position = Vector3.zero;
+        rootObj.transform.rotation = Quaternion.identity;
+
+        ArrayList materials = new ArrayList();
+        ArrayList combineInstanceArrays = new ArrayList();
+        MeshFilter[] meshFilters = rootObj.gameObject.GetComponentsInChildren<MeshFilter>();
+
+        foreach (MeshFilter meshFilter in meshFilters)
+        {
+            MeshRenderer meshRenderer = meshFilter.GetComponent<MeshRenderer>();
+
+            if (!meshRenderer ||
+                !meshFilter.sharedMesh ||
+                meshRenderer.sharedMaterials.Length != meshFilter.sharedMesh.subMeshCount)
+            {
+                continue;
+            }
+
+            for (int s = 0; s < meshFilter.sharedMesh.subMeshCount; s++)
+            {
+                int materialArrayIndex = -1;
+                for (int i = 0; i < materials.Count; i++)
+                {
+                    if (((Material)materials[i]).name == meshRenderer.sharedMaterials[s].name)
+                    {
+                        materialArrayIndex = i;
+                    }
+                }
+                if (materialArrayIndex == -1)
+                {
+                    materials.Add(meshRenderer.sharedMaterials[s]);
+                    materialArrayIndex = materials.Count - 1;
+                }
+                combineInstanceArrays.Add(new ArrayList());
+
+                CombineInstance combineInstance = new CombineInstance();
+                combineInstance.transform = meshRenderer.transform.localToWorldMatrix;
+                combineInstance.subMeshIndex = s;
+                combineInstance.mesh = meshFilter.sharedMesh;
+                (combineInstanceArrays[materialArrayIndex] as ArrayList).Add(combineInstance);
+            }
+        }
+
+        // Get / Create mesh filter & renderer
+        MeshFilter meshFilterCombine = rootObj.gameObject.GetComponent<MeshFilter>();
+        if (meshFilterCombine == null)
+        {
+            meshFilterCombine = rootObj.gameObject.AddComponent<MeshFilter>();
+        }
+        MeshRenderer meshRendererCombine = rootObj.gameObject.GetComponent<MeshRenderer>();
+        if (meshRendererCombine == null)
+        {
+            meshRendererCombine = rootObj.gameObject.AddComponent<MeshRenderer>();
+        }
+
+        // Combine by material index into per-material meshes
+        // also, Create CombineInstance array for next step
+        Mesh[] meshes = new Mesh[materials.Count];
+        CombineInstance[] combineInstances = new CombineInstance[materials.Count];
+
+        for (int m = 0; m < materials.Count; m++)
+        {
+            CombineInstance[] combineInstanceArray = (combineInstanceArrays[m] as ArrayList).ToArray(typeof(CombineInstance)) as CombineInstance[];
+            meshes[m] = new Mesh();
+            meshes[m].CombineMeshes(combineInstanceArray, true, true);
+
+            combineInstances[m] = new CombineInstance();
+            combineInstances[m].mesh = meshes[m];
+            combineInstances[m].subMeshIndex = 0;
+        }
+
+        // Combine into one
+        meshFilterCombine.sharedMesh = new Mesh();
+        meshFilterCombine.sharedMesh.CombineMeshes(combineInstances, false, false);
+
+        // Destroy other meshes
+        foreach (Mesh oldMesh in meshes)
+        {
+            oldMesh.Clear();
+            Object.DestroyImmediate(oldMesh);
+        }
+
+        // Assign materials
+        Material[] materialsArray = materials.ToArray(typeof(Material)) as Material[];
+        meshRendererCombine.materials = materialsArray;
+
+        foreach (MeshFilter meshFilter in meshFilters)
+        {
+            Object.DestroyImmediate(meshFilter.gameObject);
+        }
+
+        rootObj.transform.position = basePosition;
+        rootObj.transform.rotation = baseRotation;
+
+        return rootObj;
     }
     #endregion
 
