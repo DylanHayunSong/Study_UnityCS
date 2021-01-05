@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/WebGL_SaveLoad.unity
-    guid: 7dab749e374e0d74b87cd96c117fdf0b
+    path: Assets/Scenes/MeshDrawing.unity
+    guid: af5b72022d7d1364aaceaf0e929a199a
   m_configObjects: {}

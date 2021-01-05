@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-[ExecuteInEditMode]
+
 public class DoorExample : MonoBehaviour
 {
     public GameObject[] sides;
@@ -78,8 +78,7 @@ public class DoorExample : MonoBehaviour
 
             Vector3 newScale = new Vector3(sides[0].transform.localScale.x, bttops[0].transform.localScale.y, center.transform.localScale.z);
             corners[i].transform.localPosition = newPos;
-            corners[i].transform.localScale = newScale;
-            
+            corners[i].transform.localScale = newScale; 
         }
     }
-}
+} 
