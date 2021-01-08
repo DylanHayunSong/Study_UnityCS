@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 using Dominion.FunctionLibrary;
 
 public class MeshGenerator
@@ -832,23 +833,76 @@ public class MeshGenerator
 
         return mesh;
     }
-    public Mesh Combine (Mesh[] meshes)
+    //public Mesh Combine (Mesh[] meshes)
+    //{
+    //    Mesh mesh = new Mesh();
+
+    //    CombineInstance[] ci = new CombineInstance[meshes.Length];
+
+    //    for (int i = 0; i < meshes.Length; i++)
+    //    {
+    //        ci[i].mesh = meshes[i];
+    //        ci[i].transform = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, Vector3.one);
+    //    }
+
+    //    mesh.CombineMeshes(ci);
+
+    //    mesh.RecalculateNormals();
+    //    mesh.RecalculateBounds();
+    //    mesh.RecalculateTangents();
+
+    //    return mesh;
+    //}
+    public Mesh Combine(Mesh[] meshes)
     {
         Mesh mesh = new Mesh();
 
-        CombineInstance[] combine = new CombineInstance[meshes.Length];
+        int maxSubmshCount = 0;
 
         for (int i = 0; i < meshes.Length; i++)
         {
-            combine[i].mesh = meshes[i];
-            combine[i].transform = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, Vector3.one);
+            maxSubmshCount = meshes[i].subMeshCount;
+            if (i < meshes.Length - 1)
+            {
+                maxSubmshCount = Mathf.Max(meshes[i].subMeshCount, meshes[i + 1].subMeshCount);
+            }
         }
 
-        mesh.CombineMeshes(combine);
+        mesh.subMeshCount = maxSubmshCount;
 
-        mesh.RecalculateNormals();
-        mesh.RecalculateBounds();
-        mesh.RecalculateTangents();
+        List<CombineInstance>[] ciList = new List<CombineInstance>[maxSubmshCount];
+
+        for(int i = 0; i < maxSubmshCount; i++)
+        {
+            ciList[i] = new List<CombineInstance>();
+
+            for(int j = 0; j < meshes.Length; j++)
+            {
+                if(meshes[j].subMeshCount >= i)
+                {
+                    CombineInstance ci = new CombineInstance();
+                    ci.mesh = GenerateMesh(meshes[j].vertices, meshes[j].uv, meshes[j].GetTriangles(i));
+                    ci.transform = Matrix4x4.TRS(Vector3.zero, Quaternion.identity, Vector3.one);
+                    //ci.subMeshIndex = j;
+                    ciList[i].Add(ci);
+                }
+            } 
+        }
+
+        CombineInstance[] lastCI = new CombineInstance[ciList.Length];
+        for(int i = 0; i < ciList.Length; i++)
+        {
+            Mesh combined = new Mesh();
+            CombineInstance[] ci = ciList[i].ToArray();
+            combined.CombineMeshes(ci);
+            combined.RecalculateNormals();
+            combined.RecalculateBounds();
+            combined.RecalculateTangents();
+            
+            //lastCI[i].subMeshIndex = i;
+            lastCI[i].mesh = combined;
+        }
+        mesh.CombineMeshes(lastCI, false, false);
 
         return mesh;
     }
@@ -856,15 +910,15 @@ public class MeshGenerator
     {
         Mesh mesh = new Mesh();
 
-        CombineInstance[] combine = new CombineInstance[objs.Length];
+        CombineInstance[] ci = new CombineInstance[objs.Length];
 
         for (int i = 0; i < objs.Length; i++)
         {
-            combine[i].mesh = objs[i].GetComponent<MeshFilter>().mesh;
-            combine[i].transform = objs[i].transform.localToWorldMatrix;
+            ci[i].mesh = objs[i].GetComponent<MeshFilter>().mesh;
+            ci[i].transform = objs[i].transform.localToWorldMatrix;
         }
 
-        mesh.CombineMeshes(combine);
+        mesh.CombineMeshes(ci);
 
         mesh.RecalculateNormals();
         mesh.RecalculateBounds();

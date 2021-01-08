@@ -21,6 +21,16 @@ public class DoorMeshGenerateTest : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        filter.mesh = gen.SquareEdge(whd.x, whd.y, stileRail.x, stileRail.y, whd.z, origin, direction);
+        List<Mesh> meshes = new List<Mesh>()
+        {
+            //gen.SquareEdge(whd.x, whd.y, stileRail.x, stileRail.y, whd.z, origin, direction),
+            //gen.ShakerEdge(whd.x, whd.y, stileRail.x, stileRail.y, whd.z, origin, direction),
+            //gen.RaisedPanel(whd.x, whd.y, stileRail.x, stileRail.y, whd.z, origin, direction),
+            //gen.FlatPanel(whd.x, whd.y, stileRail.x, stileRail.y, whd.z, origin, direction),
+            //gen.FlatCombined(whd.x, whd.y, whd.z, origin, direction),
+            gen.FlatGlassCombined(whd.x, whd.y, whd.z, origin, direction),
+        };
+        filter.mesh = gen.Combine(meshes.ToArray());
+        //GetComponent<MeshRenderer>().materials = new Material[filter.mesh.subMeshCount];
     }
 }
